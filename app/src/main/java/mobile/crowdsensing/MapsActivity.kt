@@ -2,11 +2,13 @@ package mobile.crowdsensing
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.Button
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -58,6 +60,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // A local method to request required permissions;
             // See https://developer.android.com/training/permissions/requesting
         }
+
     }
 
     /**
@@ -75,4 +78,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
+
 }
