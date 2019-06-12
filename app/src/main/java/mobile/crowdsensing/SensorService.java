@@ -98,34 +98,22 @@ public class SensorService extends Service implements SensorEventListener {
         mSensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, temp, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, humidity, SensorManager.SENSOR_DELAY_NORMAL);
-
-//        tc.startTimer(counter);
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         Log.i(TAG, "serviceOnDestroy()");
-
         Intent broadcastIntent = new Intent("mobile.crowdsensing.RestartSensor");
         sendBroadcast(broadcastIntent);
-//        tc.stopTimerTask();
         super.onDestroy();
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.i(TAG, "serviceonTaskRemoved()");
-
-
         Intent broadcastIntent = new Intent("mobile.crowdsensing.RestartSensor");
         sendBroadcast(broadcastIntent);
-        // workaround for kitkat: set an alarm service to trigger service again
-//        Intent intent = new Intent(getApplicationContext(), SensorService.class);
-//        PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 5000, pendingIntent);
-
         super.onTaskRemoved(rootIntent);
 
     }
@@ -138,30 +126,6 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-
-            float[] values = event.values;
-            float x = values[0];
-            float y = values[1];
-            float z = values[2];
-//            Toast.makeText(this,"Accelerometer service is started"+Float.toString(x),Toast.LENGTH_SHORT).show();
-            Log.i("kkkkkkkkkkkk", "MyClass.getView() — get item number " + values[2]);
-//            tv1.setText("X value : "+ values[0]);
-            long curTime = System.currentTimeMillis();
-            if ((curTime - lastUpdate) > 100) {
-                long diffTime = (curTime - lastUpdate);
-                lastUpdate = curTime;
-                float speed
-                        = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
-
-                last_x = x;
-                last_y = y;
-                last_z = z;
-            }
-            // Stop the sensor and service
-//            mSensorManager.unregisterListener(this);
-//            stopSelf();
-        }
         if (light.getType() == Sensor.TYPE_LIGHT) {
             float x =  event.values[0];
             Log.i("kkkkkkkkkkkk", " Ambient light level in SI lux units " + x);
