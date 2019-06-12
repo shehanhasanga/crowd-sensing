@@ -2,6 +2,7 @@ package mobile.crowdsensing
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +24,10 @@ import kotlinx.android.synthetic.main.activity_maps.*
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+    internal lateinit var mServiceIntent: Intent
+
+    private lateinit var ctx: Context
+    private var mSensorService: SensorService? = null
 
     private lateinit var mMap: GoogleMap
 
@@ -61,6 +66,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             // See https://developer.android.com/training/permissions/requesting
         }
 
+        ctx = this
+//        mSensorService = SensorService(getCtx())
+        mServiceIntent = Intent(getCtx(), SensorService::class.java)
+        startService(mServiceIntent)
+
     }
 
     /**
@@ -79,4 +89,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
+    fun getCtx(): Context {
+        return ctx
+    }
+
+    override fun onDestroy() {
+        Log.i("kkkkk", "onDestroy")
+
+        val broadcastIntent = Intent("mobile.crowdsensing.RestartSensor")
+        sendBroadcast(broadcastIntent)
+
+        // ondestroy service not being called
+        //        stopService(mServiceIntent);
+
+        super.onDestroy()
+
+    }
 }

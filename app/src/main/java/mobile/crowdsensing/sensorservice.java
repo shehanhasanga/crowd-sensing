@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-public class sensorservice   extends Service implements SensorEventListener {
+public class sensorservice   extends  Service   implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private Sensor temp;
