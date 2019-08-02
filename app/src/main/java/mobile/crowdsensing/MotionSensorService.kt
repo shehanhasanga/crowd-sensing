@@ -16,6 +16,7 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.firebase.database.FirebaseDatabase
+import java.lang.Exception
 import java.util.*
 
 
@@ -132,6 +133,7 @@ class MotionSensorService : Service(), SensorEventListener {
         processing = true
 
         val placeFields = Arrays.asList(
+            Place.Field.ID,
             Place.Field.NAME,
             Place.Field.LAT_LNG,
             Place.Field.ADDRESS,
@@ -195,27 +197,46 @@ class MotionSensorService : Service(), SensorEventListener {
             return
         }
 
-        if (temperatureSensor != null) {
-            val x = temperatureReadings.average()
-            Log.i("MotionSensorService", "tempReadings: $x")
-        }
-        if (humiditySensor != null) {
-            val x = humidityReadings.average()
-            Log.i("MotionSensorService", "humidityReadings: $x")
-        }
-        if (lightSensor != null) {
-            val x = lightReadings.average()
-            Log.i("MotionSensorService", "lightReadings: $x")
-        }
+        pushReadings()
+    }
 
-        // Clearing
-        restaurantPlaces.clear()
-        temperatureReadings.clear()
-        humidityReadings.clear()
-        lightReadings.clear()
+    private fun pushReadings() {
+        try {
+            val database = FirebaseDatabase.getInstance()
+            for (place in restaurantPlaces) {
+                val placeId = place.place.id
+                val placeLikelihood = place.likelihood
+                val date = Date()
+                val timestamp = date.time
+                val placeRef = database.getReference("$placeId/$timestamp")
+                placeRef.child("likelihood").setValue(placeLikelihood)
 
-        // Finish reading
-        processing = false
+                if (temperatureSensor != null) {
+                    placeRef.child("temperature").setValue(temperatureReadings.average())
+
+                }
+                if (humiditySensor != null) {
+                    placeRef.child("humidity").setValue(humidityReadings.average())
+
+                }
+                if (lightSensor != null) {
+                    placeRef.child("light").setValue(lightReadings.average())
+
+                }
+
+            }
+        } catch (e: Exception) {
+
+        } finally {
+            // Clearing
+            restaurantPlaces.clear()
+            temperatureReadings.clear()
+            humidityReadings.clear()
+            lightReadings.clear()
+
+            // Finish reading
+            processing = false
+        }
     }
 
     private fun registerSensorListeners() {
