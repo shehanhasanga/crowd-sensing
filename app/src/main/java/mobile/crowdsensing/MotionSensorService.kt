@@ -250,4 +250,19 @@ class MotionSensorService : Service(), SensorEventListener {
             sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_UI)
         }
     }
+
+    override fun onDestroy() {
+        Log.i("MotionSensorService", "onDestroy()")
+        val broadcastIntent = Intent("mobile.crowdsensing.RestartService")
+        sendBroadcast(broadcastIntent)
+        super.onDestroy()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent) {
+        Log.i("MotionSensorService", "onTaskRemoved()")
+        val broadcastIntent = Intent("mobile.crowdsensing.RestartService")
+        sendBroadcast(broadcastIntent)
+        super.onTaskRemoved(rootIntent)
+
+    }
 }
