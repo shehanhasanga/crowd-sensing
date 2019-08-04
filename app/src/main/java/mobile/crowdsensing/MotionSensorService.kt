@@ -39,7 +39,6 @@ class MotionSensorService : Service(), SensorEventListener {
 
     private lateinit var placesClient: PlacesClient
     private var restaurantPlaces: MutableList<PlaceLikelihood> = mutableListOf<PlaceLikelihood>()
-    private val restaurantTypes = arrayOf("RESTAURANT", "BAR", "FOOD")
 
     private val SAMPLE_SIZE = 10
 
@@ -161,8 +160,9 @@ class MotionSensorService : Service(), SensorEventListener {
                         )
                     )
                     for (type in placeLikelihood.place.types!!) {
-                        if (restaurantTypes.contains(type.toString())) {
+                        if (AppConstant.TYPES.contains(type.toString())) {
                             restaurantPlaces.add(placeLikelihood)
+                            break
                         }
                     }
                 }

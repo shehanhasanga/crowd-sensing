@@ -32,17 +32,13 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key"/>
 
-        <activity android:name=".MapsActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN"/> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-            <!-- </intent-filter> -->
+        <activity
+                android:name=".MapsActivity"
+                android:launchMode="singleInstance">
         </activity>
-
-        <activity android:name=".MainActivity">
+        <activity
+                android:name=".MainActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -68,6 +64,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name=".MoreDetailsActivity">
+        </activity>
     </application>
 
 </manifest>
